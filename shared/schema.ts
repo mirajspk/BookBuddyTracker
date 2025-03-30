@@ -16,6 +16,25 @@ export const books = pgTable("books", {
   dateStarted: timestamp("date_started"),
   dateFinished: timestamp("date_finished"),
   description: text("description"),
+  isWishlist: boolean("is_wishlist").default(false), // Track if book is in wishlist
+  tags: text("tags").array(), // For catalog filtering
+});
+
+// Collections for organizing books
+export const collections = pgTable("collections", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  dateCreated: timestamp("date_created").defaultNow(),
+  coverUrl: text("cover_url"), // Optional collection cover
+});
+
+// Junction table for books in collections
+export const bookCollections = pgTable("book_collections", {
+  id: serial("id").primaryKey(),
+  bookId: integer("book_id").notNull(),
+  collectionId: integer("collection_id").notNull(),
+  dateAdded: timestamp("date_added").defaultNow(),
 });
 
 // Review table
@@ -52,6 +71,16 @@ export const insertBookSchema = createInsertSchema(books).omit({
   dateAdded: true
 });
 
+export const insertCollectionSchema = createInsertSchema(collections).omit({
+  id: true,
+  dateCreated: true
+});
+
+export const insertBookCollectionSchema = createInsertSchema(bookCollections).omit({
+  id: true,
+  dateAdded: true
+});
+
 export const insertReviewSchema = createInsertSchema(reviews).omit({ 
   id: true,
   dateReviewed: true
@@ -71,6 +100,12 @@ export const insertReadingGoalSchema = createInsertSchema(readingGoals).omit({
 // Types
 export type Book = typeof books.$inferSelect;
 export type InsertBook = z.infer<typeof insertBookSchema>;
+
+export type Collection = typeof collections.$inferSelect;
+export type InsertCollection = z.infer<typeof insertCollectionSchema>;
+
+export type BookCollection = typeof bookCollections.$inferSelect;
+export type InsertBookCollection = z.infer<typeof insertBookCollectionSchema>;
 
 export type Review = typeof reviews.$inferSelect;
 export type InsertReview = z.infer<typeof insertReviewSchema>;

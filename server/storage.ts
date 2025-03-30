@@ -2,7 +2,9 @@ import {
   Book, InsertBook, 
   Review, InsertReview, 
   ReadingSession, InsertReadingSession,
-  ReadingGoal, InsertReadingGoal
+  ReadingGoal, InsertReadingGoal,
+  Collection, InsertCollection,
+  BookCollection, InsertBookCollection
 } from "@shared/schema";
 
 export interface IStorage {
@@ -13,6 +15,21 @@ export interface IStorage {
   updateBook(id: number, book: Partial<Book>): Promise<Book | undefined>;
   deleteBook(id: number): Promise<boolean>;
   getBooksByStatus(status: string): Promise<Book[]>;
+  getWishlistBooks(): Promise<Book[]>;
+  getBooksByTags(tags: string[]): Promise<Book[]>;
+
+  // Collection operations
+  getAllCollections(): Promise<Collection[]>;
+  getCollectionById(id: number): Promise<Collection | undefined>;
+  createCollection(collection: InsertCollection): Promise<Collection>;
+  updateCollection(id: number, collection: Partial<Collection>): Promise<Collection | undefined>;
+  deleteCollection(id: number): Promise<boolean>;
+  
+  // Book-Collection operations
+  getBooksInCollection(collectionId: number): Promise<Book[]>;
+  getCollectionsForBook(bookId: number): Promise<Collection[]>;
+  addBookToCollection(bookCollectionData: InsertBookCollection): Promise<BookCollection>;
+  removeBookFromCollection(bookId: number, collectionId: number): Promise<boolean>;
 
   // Review operations
   getAllReviews(): Promise<Review[]>;
@@ -38,20 +55,28 @@ export class MemStorage implements IStorage {
   private reviews: Map<number, Review>;
   private readingSessions: Map<number, ReadingSession>;
   private readingGoals: Map<number, ReadingGoal>;
+  private collections: Map<number, Collection>;
+  private bookCollections: Map<number, BookCollection>;
   private bookIdCounter: number;
   private reviewIdCounter: number;
   private sessionIdCounter: number;
   private goalIdCounter: number;
+  private collectionIdCounter: number;
+  private bookCollectionIdCounter: number;
 
   constructor() {
     this.books = new Map();
     this.reviews = new Map();
     this.readingSessions = new Map();
     this.readingGoals = new Map();
+    this.collections = new Map();
+    this.bookCollections = new Map();
     this.bookIdCounter = 1;
     this.reviewIdCounter = 1;
     this.sessionIdCounter = 1;
     this.goalIdCounter = 1;
+    this.collectionIdCounter = 1;
+    this.bookCollectionIdCounter = 1;
 
     // Initialize with some sample data (for development)
     this.initializeWithSampleData();
@@ -72,7 +97,16 @@ export class MemStorage implements IStorage {
     
     const book: Book = {
       id,
-      ...insertBook,
+      title: insertBook.title,
+      author: insertBook.author,
+      genre: insertBook.genre,
+      status: insertBook.status,
+      progress: insertBook.progress || null,
+      pages: insertBook.pages || null,
+      description: insertBook.description || null,
+      isWishlist: insertBook.isWishlist || false,
+      tags: insertBook.tags || null,
+      coverUrl: insertBook.coverUrl || null,
       dateAdded: now,
       dateStarted: insertBook.status === "reading" ? now : null,
       dateFinished: insertBook.status === "completed" ? now : null,
@@ -117,6 +151,114 @@ export class MemStorage implements IStorage {
     return Array.from(this.books.values()).filter(book => book.status === status);
   }
 
+  async getWishlistBooks(): Promise<Book[]> {
+    return Array.from(this.books.values()).filter(book => book.isWishlist === true);
+  }
+
+  async getBooksByTags(tags: string[]): Promise<Book[]> {
+    return Array.from(this.books.values()).filter(book => {
+      if (!book.tags) return false;
+      return tags.some(tag => book.tags!.includes(tag));
+    });
+  }
+
+  // Collection operations
+  async getAllCollections(): Promise<Collection[]> {
+    return Array.from(this.collections.values());
+  }
+
+  async getCollectionById(id: number): Promise<Collection | undefined> {
+    return this.collections.get(id);
+  }
+
+  async createCollection(collection: InsertCollection): Promise<Collection> {
+    const id = this.collectionIdCounter++;
+    const now = new Date();
+    
+    const newCollection: Collection = {
+      id,
+      name: collection.name,
+      description: collection.description || null,
+      coverUrl: collection.coverUrl || null,
+      dateCreated: now
+    };
+    
+    this.collections.set(id, newCollection);
+    return newCollection;
+  }
+
+  async updateCollection(id: number, updateData: Partial<Collection>): Promise<Collection | undefined> {
+    const collection = this.collections.get(id);
+    if (!collection) return undefined;
+
+    const updatedCollection = { ...collection, ...updateData };
+    this.collections.set(id, updatedCollection);
+    return updatedCollection;
+  }
+
+  async deleteCollection(id: number): Promise<boolean> {
+    // Remove books from collection
+    const bookCollections = Array.from(this.bookCollections.values())
+      .filter(bc => bc.collectionId === id);
+    
+    bookCollections.forEach(bc => this.bookCollections.delete(bc.id));
+    
+    return this.collections.delete(id);
+  }
+
+  // Book-Collection operations
+  async getBooksInCollection(collectionId: number): Promise<Book[]> {
+    const bookIds = Array.from(this.bookCollections.values())
+      .filter(bc => bc.collectionId === collectionId)
+      .map(bc => bc.bookId);
+    
+    return Array.from(this.books.values())
+      .filter(book => bookIds.includes(book.id));
+  }
+
+  async getCollectionsForBook(bookId: number): Promise<Collection[]> {
+    const collectionIds = Array.from(this.bookCollections.values())
+      .filter(bc => bc.bookId === bookId)
+      .map(bc => bc.collectionId);
+    
+    return Array.from(this.collections.values())
+      .filter(collection => collectionIds.includes(collection.id));
+  }
+
+  async addBookToCollection(bookCollectionData: InsertBookCollection): Promise<BookCollection> {
+    // Check if already exists
+    const exists = Array.from(this.bookCollections.values())
+      .some(bc => 
+        bc.bookId === bookCollectionData.bookId && 
+        bc.collectionId === bookCollectionData.collectionId
+      );
+    
+    if (exists) {
+      throw new Error('Book is already in this collection');
+    }
+    
+    const id = this.bookCollectionIdCounter++;
+    const now = new Date();
+    
+    const bookCollection: BookCollection = {
+      id,
+      ...bookCollectionData,
+      dateAdded: now
+    };
+    
+    this.bookCollections.set(id, bookCollection);
+    return bookCollection;
+  }
+
+  async removeBookFromCollection(bookId: number, collectionId: number): Promise<boolean> {
+    const bookCollection = Array.from(this.bookCollections.values())
+      .find(bc => bc.bookId === bookId && bc.collectionId === collectionId);
+    
+    if (!bookCollection) return false;
+    
+    return this.bookCollections.delete(bookCollection.id);
+  }
+
   // Review operations
   async getAllReviews(): Promise<Review[]> {
     return Array.from(this.reviews.values());
@@ -134,7 +276,10 @@ export class MemStorage implements IStorage {
     const id = this.reviewIdCounter++;
     const review: Review = {
       id,
-      ...insertReview,
+      bookId: insertReview.bookId,
+      rating: insertReview.rating || null,
+      content: insertReview.content || null,
+      tags: insertReview.tags || null,
       dateReviewed: new Date(),
     };
     
@@ -174,7 +319,7 @@ export class MemStorage implements IStorage {
       
       const progress = Math.min(Math.floor((totalPagesRead / book.pages) * 100), 100);
       
-      if (progress > book.progress) {
+      if (book.progress === null || progress > book.progress) {
         await this.updateBook(book.id, { progress });
       }
       
@@ -192,9 +337,10 @@ export class MemStorage implements IStorage {
           const goal = await this.getReadingGoal(year);
           
           if (goal) {
+            const currentBooks = goal.booksRead || 0;
             await this.updateReadingGoal(year, { 
-              booksRead: goal.booksRead + 1,
-              completed: goal.booksRead + 1 >= goal.targetBooks
+              booksRead: currentBooks + 1,
+              completed: (currentBooks + 1) >= goal.targetBooks
             });
           }
         }
@@ -211,7 +357,11 @@ export class MemStorage implements IStorage {
 
   async getReadingSessionsByDateRange(startDate: Date, endDate: Date): Promise<ReadingSession[]> {
     return Array.from(this.readingSessions.values())
-      .filter(session => session.date >= startDate && session.date <= endDate);
+      .filter(session => {
+        // Safety check for null dates
+        if (!session.date) return false;
+        return session.date >= startDate && session.date <= endDate;
+      });
   }
 
   // Reading goal operations
@@ -340,10 +490,19 @@ export class MemStorage implements IStorage {
       const id = this.bookIdCounter++;
       const fullBook: Book = {
         id,
-        ...book,
+        title: book.title,
+        author: book.author,
+        genre: book.genre,
+        status: book.status,
+        progress: book.progress || null,
+        pages: book.pages || null,
+        description: book.description || null,
         dateAdded,
         dateStarted,
-        dateFinished
+        dateFinished,
+        isWishlist: false,
+        tags: null,
+        coverUrl: book.coverUrl || null
       };
       
       this.books.set(id, fullBook);
@@ -369,7 +528,10 @@ export class MemStorage implements IStorage {
       const id = this.reviewIdCounter++;
       const fullReview: Review = {
         id,
-        ...review,
+        bookId: review.bookId,
+        rating: review.rating || null,
+        content: review.content || null,
+        tags: review.tags || null,
         dateReviewed: new Date()
       };
       
@@ -420,6 +582,60 @@ export class MemStorage implements IStorage {
     };
     
     this.readingGoals.set(goalId, fullGoal);
+
+    // Add sample collections
+    const sampleCollections: InsertCollection[] = [
+      {
+        name: "Fantasy Favorites",
+        description: "My favorite fantasy novels of all time"
+      },
+      {
+        name: "Non-Fiction Classics",
+        description: "Essential non-fiction reads"
+      },
+      {
+        name: "Reading List 2025",
+        description: "Books I want to read this year"
+      },
+      {
+        name: "Wishlist",
+        description: "Books I'd like to purchase"
+      }
+    ];
+
+    sampleCollections.forEach(collection => {
+      const id = this.collectionIdCounter++;
+      const fullCollection: Collection = {
+        id,
+        name: collection.name,
+        description: collection.description || null,
+        dateCreated: new Date(),
+        coverUrl: null
+      };
+      
+      this.collections.set(id, fullCollection);
+    });
+
+    // Add books to collections
+    const collectionAssignments = [
+      { bookId: 5, collectionId: 1 },  // The Alchemist to Fantasy Favorites
+      { bookId: 1, collectionId: 2 },  // Atomic Habits to Non-Fiction Classics
+      { bookId: 2, collectionId: 2 },  // Sapiens to Non-Fiction Classics
+      { bookId: 3, collectionId: 3 },  // Psychology of Money to Reading List 2025
+      { bookId: 4, collectionId: 3 },  // Deep Work to Reading List 2025
+    ];
+
+    collectionAssignments.forEach(assignment => {
+      const id = this.bookCollectionIdCounter++;
+      const bookCollection: BookCollection = {
+        id,
+        bookId: assignment.bookId,
+        collectionId: assignment.collectionId,
+        dateAdded: new Date()
+      };
+      
+      this.bookCollections.set(id, bookCollection);
+    });
   }
 }
 

@@ -5,7 +5,9 @@ import {
   insertBookSchema, 
   insertReviewSchema, 
   insertReadingSessionSchema,
-  insertReadingGoalSchema 
+  insertReadingGoalSchema,
+  insertCollectionSchema,
+  insertBookCollectionSchema
 } from "@shared/schema";
 import { z } from "zod";
 import { ZodError } from "zod";
@@ -332,6 +334,237 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (err) {
       console.error("Error updating reading goal:", err);
       return res.status(500).json({ message: "Failed to update reading goal" });
+    }
+  });
+
+  // Wishlist routes
+  app.get("/api/books/wishlist", async (_req: Request, res: Response) => {
+    try {
+      const books = await storage.getWishlistBooks();
+      return res.json(books);
+    } catch (err) {
+      console.error("Error fetching wishlist books:", err);
+      return res.status(500).json({ message: "Failed to fetch wishlist books" });
+    }
+  });
+
+  app.post("/api/books/:id/wishlist", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid book ID" });
+      }
+
+      const book = await storage.getBookById(id);
+      if (!book) {
+        return res.status(404).json({ message: "Book not found" });
+      }
+
+      const updatedBook = await storage.updateBook(id, { isWishlist: true });
+      return res.json(updatedBook);
+    } catch (err) {
+      console.error("Error adding book to wishlist:", err);
+      return res.status(500).json({ message: "Failed to add book to wishlist" });
+    }
+  });
+
+  app.delete("/api/books/:id/wishlist", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid book ID" });
+      }
+
+      const book = await storage.getBookById(id);
+      if (!book) {
+        return res.status(404).json({ message: "Book not found" });
+      }
+
+      const updatedBook = await storage.updateBook(id, { isWishlist: false });
+      return res.json(updatedBook);
+    } catch (err) {
+      console.error("Error removing book from wishlist:", err);
+      return res.status(500).json({ message: "Failed to remove book from wishlist" });
+    }
+  });
+
+  // Book tag routes
+  app.get("/api/books/tags/:tag", async (req: Request, res: Response) => {
+    try {
+      const tag = req.params.tag;
+      const books = await storage.getBooksByTags([tag]);
+      return res.json(books);
+    } catch (err) {
+      console.error("Error fetching books by tag:", err);
+      return res.status(500).json({ message: "Failed to fetch books by tag" });
+    }
+  });
+
+  // Collections routes
+  app.get("/api/collections", async (_req: Request, res: Response) => {
+    try {
+      const collections = await storage.getAllCollections();
+      return res.json(collections);
+    } catch (err) {
+      console.error("Error fetching collections:", err);
+      return res.status(500).json({ message: "Failed to fetch collections" });
+    }
+  });
+
+  app.get("/api/collections/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid collection ID" });
+      }
+
+      const collection = await storage.getCollectionById(id);
+      if (!collection) {
+        return res.status(404).json({ message: "Collection not found" });
+      }
+
+      return res.json(collection);
+    } catch (err) {
+      console.error("Error fetching collection:", err);
+      return res.status(500).json({ message: "Failed to fetch collection" });
+    }
+  });
+
+  app.post("/api/collections", async (req: Request, res: Response) => {
+    try {
+      const collectionData = insertCollectionSchema.parse(req.body);
+      const collection = await storage.createCollection(collectionData);
+      return res.status(201).json(collection);
+    } catch (err) {
+      console.error("Error creating collection:", err);
+      return handleValidationError(err, res);
+    }
+  });
+
+  app.put("/api/collections/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid collection ID" });
+      }
+
+      const collectionData = req.body;
+      const updatedCollection = await storage.updateCollection(id, collectionData);
+      
+      if (!updatedCollection) {
+        return res.status(404).json({ message: "Collection not found" });
+      }
+
+      return res.json(updatedCollection);
+    } catch (err) {
+      console.error("Error updating collection:", err);
+      return res.status(500).json({ message: "Failed to update collection" });
+    }
+  });
+
+  app.delete("/api/collections/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid collection ID" });
+      }
+
+      const success = await storage.deleteCollection(id);
+      if (!success) {
+        return res.status(404).json({ message: "Collection not found" });
+      }
+
+      return res.json({ success: true });
+    } catch (err) {
+      console.error("Error deleting collection:", err);
+      return res.status(500).json({ message: "Failed to delete collection" });
+    }
+  });
+
+  // Books in collections routes
+  app.get("/api/collections/:id/books", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid collection ID" });
+      }
+
+      const books = await storage.getBooksInCollection(id);
+      return res.json(books);
+    } catch (err) {
+      console.error("Error fetching books in collection:", err);
+      return res.status(500).json({ message: "Failed to fetch books in collection" });
+    }
+  });
+
+  app.get("/api/books/:id/collections", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid book ID" });
+      }
+
+      const collections = await storage.getCollectionsForBook(id);
+      return res.json(collections);
+    } catch (err) {
+      console.error("Error fetching collections for book:", err);
+      return res.status(500).json({ message: "Failed to fetch collections for book" });
+    }
+  });
+
+  app.post("/api/collections/:collectionId/books/:bookId", async (req: Request, res: Response) => {
+    try {
+      const collectionId = parseInt(req.params.collectionId);
+      const bookId = parseInt(req.params.bookId);
+      
+      if (isNaN(collectionId) || isNaN(bookId)) {
+        return res.status(400).json({ message: "Invalid IDs" });
+      }
+
+      // Verify both collection and book exist
+      const collection = await storage.getCollectionById(collectionId);
+      if (!collection) {
+        return res.status(404).json({ message: "Collection not found" });
+      }
+
+      const book = await storage.getBookById(bookId);
+      if (!book) {
+        return res.status(404).json({ message: "Book not found" });
+      }
+
+      const bookCollection = await storage.addBookToCollection({ 
+        bookId, 
+        collectionId 
+      });
+      
+      return res.status(201).json(bookCollection);
+    } catch (err) {
+      console.error("Error adding book to collection:", err);
+      if (err instanceof Error && err.message === 'Book is already in this collection') {
+        return res.status(400).json({ message: err.message });
+      }
+      return res.status(500).json({ message: "Failed to add book to collection" });
+    }
+  });
+
+  app.delete("/api/collections/:collectionId/books/:bookId", async (req: Request, res: Response) => {
+    try {
+      const collectionId = parseInt(req.params.collectionId);
+      const bookId = parseInt(req.params.bookId);
+      
+      if (isNaN(collectionId) || isNaN(bookId)) {
+        return res.status(400).json({ message: "Invalid IDs" });
+      }
+
+      const success = await storage.removeBookFromCollection(bookId, collectionId);
+      if (!success) {
+        return res.status(404).json({ message: "Book not found in collection" });
+      }
+
+      return res.json({ success: true });
+    } catch (err) {
+      console.error("Error removing book from collection:", err);
+      return res.status(500).json({ message: "Failed to remove book from collection" });
     }
   });
 
