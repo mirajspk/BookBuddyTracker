@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Bell, Moon, Sun, Monitor, Globe, Save, Trash2, LogOut } from "lucide-react";
@@ -63,56 +62,42 @@ export default function SettingsPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Sidebar navigation */}
         <div className="md:col-span-1">
-          <Tabs
-            orientation="vertical"
-            value={activeTab}
-            onValueChange={setActiveTab}
-            className="w-full"
-          >
-            <TabsList className="flex flex-col h-auto space-y-1 bg-transparent p-0">
-              <TabsTrigger
-                value="appearance"
-                className="justify-start px-4 py-2 text-left"
-              >
-                <div className="flex items-center">
-                  <Monitor className="mr-2 h-4 w-4" />
-                  <span>Appearance</span>
-                </div>
-              </TabsTrigger>
-              <TabsTrigger
-                value="notifications"
-                className="justify-start px-4 py-2 text-left"
-              >
-                <div className="flex items-center">
-                  <Bell className="mr-2 h-4 w-4" />
-                  <span>Notifications</span>
-                </div>
-              </TabsTrigger>
-              <TabsTrigger
-                value="privacy"
-                className="justify-start px-4 py-2 text-left"
-              >
-                <div className="flex items-center">
-                  <Globe className="mr-2 h-4 w-4" />
-                  <span>Privacy</span>
-                </div>
-              </TabsTrigger>
-              <TabsTrigger
-                value="account"
-                className="justify-start px-4 py-2 text-left"
-              >
-                <div className="flex items-center">
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Account</span>
-                </div>
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+          <div className="flex flex-col space-y-1">
+            <button 
+              onClick={() => setActiveTab("appearance")}
+              className={`flex items-center justify-start px-4 py-2 text-left rounded-md hover:bg-gray-100 ${activeTab === "appearance" ? "bg-gray-100 text-primary font-medium" : ""}`}
+            >
+              <Monitor className="mr-2 h-4 w-4" />
+              <span>Appearance</span>
+            </button>
+            <button 
+              onClick={() => setActiveTab("notifications")}
+              className={`flex items-center justify-start px-4 py-2 text-left rounded-md hover:bg-gray-100 ${activeTab === "notifications" ? "bg-gray-100 text-primary font-medium" : ""}`}
+            >
+              <Bell className="mr-2 h-4 w-4" />
+              <span>Notifications</span>
+            </button>
+            <button 
+              onClick={() => setActiveTab("privacy")}
+              className={`flex items-center justify-start px-4 py-2 text-left rounded-md hover:bg-gray-100 ${activeTab === "privacy" ? "bg-gray-100 text-primary font-medium" : ""}`}
+            >
+              <Globe className="mr-2 h-4 w-4" />
+              <span>Privacy</span>
+            </button>
+            <button 
+              onClick={() => setActiveTab("account")}
+              className={`flex items-center justify-start px-4 py-2 text-left rounded-md hover:bg-gray-100 ${activeTab === "account" ? "bg-gray-100 text-primary font-medium" : ""}`}
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Account</span>
+            </button>
+          </div>
         </div>
         
         {/* Settings content */}
         <div className="md:col-span-2">
-          <TabsContent value="appearance" className="m-0">
+          {/* Appearance Tab */}
+          {activeTab === "appearance" && (
             <Card>
               <CardHeader>
                 <CardTitle>Appearance</CardTitle>
@@ -194,9 +179,10 @@ export default function SettingsPage() {
                 </Button>
               </CardFooter>
             </Card>
-          </TabsContent>
+          )}
           
-          <TabsContent value="notifications" className="m-0">
+          {/* Notifications Tab */}
+          {activeTab === "notifications" && (
             <Card>
               <CardHeader>
                 <CardTitle>Notifications</CardTitle>
@@ -277,9 +263,10 @@ export default function SettingsPage() {
                 </Button>
               </CardFooter>
             </Card>
-          </TabsContent>
+          )}
           
-          <TabsContent value="privacy" className="m-0">
+          {/* Privacy Tab */}
+          {activeTab === "privacy" && (
             <Card>
               <CardHeader>
                 <CardTitle>Privacy</CardTitle>
@@ -352,9 +339,10 @@ export default function SettingsPage() {
                 </Button>
               </CardFooter>
             </Card>
-          </TabsContent>
+          )}
           
-          <TabsContent value="account" className="m-0">
+          {/* Account Tab */}
+          {activeTab === "account" && (
             <Card>
               <CardHeader>
                 <CardTitle>Account</CardTitle>
@@ -420,7 +408,7 @@ export default function SettingsPage() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+          )}
         </div>
       </div>
     </div>
