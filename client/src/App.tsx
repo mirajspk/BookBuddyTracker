@@ -11,6 +11,9 @@ import Discover from "@/pages/Discover";
 import NotFound from "@/pages/not-found";
 import LandingPage from "@/pages/landing-page";
 import AuthPage from "@/pages/auth-page";
+import ProfilePage from "@/pages/profile-page";
+import SettingsPage from "@/pages/settings-page";
+import HelpPage from "@/pages/help-page";
 
 function Router() {
   const [location] = useLocation();
@@ -34,6 +37,9 @@ function Router() {
         <Route path="/reviews" component={Reviews} />
         <Route path="/stats" component={Statistics} />
         <Route path="/discover" component={Discover} />
+        <Route path="/profile" component={ProfilePage} />
+        <Route path="/settings" component={SettingsPage} />
+        <Route path="/help" component={HelpPage} />
         <Route component={NotFound} />
       </Switch>
     </Layout>
