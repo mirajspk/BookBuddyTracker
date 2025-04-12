@@ -114,15 +114,54 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         
         <div className="mt-8 pt-6 border-t border-gray-200">
           <div className="space-y-1">
-            <button className="flex items-center w-full p-3 rounded-lg text-left hover:bg-gray-100">
-              <SettingsIcon className="mr-3 h-5 w-5" />
-              <span>Settings</span>
-            </button>
+            <Link href="/profile">
+              <a
+                className={`
+                  flex items-center w-full p-3 rounded-lg text-left hover:bg-gray-100 
+                  border-l-4 ${isActive("/profile") ? "border-primary text-primary" : "border-transparent"}
+                `}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="mr-3 h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+                <span>My Profile</span>
+              </a>
+            </Link>
+
+            <Link href="/settings">
+              <a
+                className={`
+                  flex items-center w-full p-3 rounded-lg text-left hover:bg-gray-100 
+                  border-l-4 ${isActive("/settings") ? "border-primary text-primary" : "border-transparent"}
+                `}
+              >
+                <SettingsIcon className="mr-3 h-5 w-5" />
+                <span>Settings</span>
+              </a>
+            </Link>
             
-            <button className="flex items-center w-full p-3 rounded-lg text-left hover:bg-gray-100">
-              <HelpCircleIcon className="mr-3 h-5 w-5" />
-              <span>Help</span>
-            </button>
+            <Link href="/help">
+              <a
+                className={`
+                  flex items-center w-full p-3 rounded-lg text-left hover:bg-gray-100 
+                  border-l-4 ${isActive("/help") ? "border-primary text-primary" : "border-transparent"}
+                `}
+              >
+                <HelpCircleIcon className="mr-3 h-5 w-5" />
+                <span>Help Center</span>
+              </a>
+            </Link>
           </div>
         </div>
       </div>
