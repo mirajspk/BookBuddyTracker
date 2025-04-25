@@ -38,130 +38,146 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         </div>
         
         <div className="space-y-1">
-          <Link href="/">
-            <a
-              className={`
-                flex items-center w-full p-3 rounded-lg text-left hover:bg-gray-100 
-                border-l-4 ${isActive("/") ? "border-primary text-primary" : "border-transparent"}
-              `}
-            >
-              <LayoutDashboardIcon className="mr-3 h-5 w-5" />
-              <span>Dashboard</span>
-            </a>
-          </Link>
-          
-          <Link href="/library">
-            <a
-              className={`
-                flex items-center w-full p-3 rounded-lg text-left hover:bg-gray-100 
-                border-l-4 ${isActive("/library") ? "border-primary text-primary" : "border-transparent"}
-              `}
-            >
-              <BookOpenIcon className="mr-3 h-5 w-5" />
-              <span>My Library</span>
-            </a>
-          </Link>
-          
-          <Link href="/reviews">
-            <a
-              className={`
-                flex items-center w-full p-3 rounded-lg text-left hover:bg-gray-100 
-                border-l-4 ${isActive("/reviews") ? "border-primary text-primary" : "border-transparent"}
-              `}
-            >
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                className="mr-3 h-5 w-5" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor"
+          <div>
+            <Link href="/">
+              <div
+                className={`
+                  flex items-center w-full p-3 rounded-lg text-left hover:bg-gray-100 cursor-pointer
+                  border-l-4 ${isActive("/") ? "border-primary text-primary" : "border-transparent"}
+                `}
               >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-                />
-              </svg>
-              <span>My Reviews</span>
-            </a>
-          </Link>
+                <LayoutDashboardIcon className="mr-3 h-5 w-5" />
+                <span>Dashboard</span>
+              </div>
+            </Link>
+          </div>
           
-          <Link href="/discover">
-            <a
-              className={`
-                flex items-center w-full p-3 rounded-lg text-left hover:bg-gray-100 
-                border-l-4 ${isActive("/discover") ? "border-primary text-primary" : "border-transparent"}
-              `}
-            >
-              <CompassIcon className="mr-3 h-5 w-5" />
-              <span>Discover</span>
-            </a>
-          </Link>
+          <div>
+            <Link href="/library">
+              <div
+                className={`
+                  flex items-center w-full p-3 rounded-lg text-left hover:bg-gray-100 cursor-pointer
+                  border-l-4 ${isActive("/library") ? "border-primary text-primary" : "border-transparent"}
+                `}
+              >
+                <BookOpenIcon className="mr-3 h-5 w-5" />
+                <span>My Library</span>
+              </div>
+            </Link>
+          </div>
           
-          <Link href="/stats">
-            <a
-              className={`
-                flex items-center w-full p-3 rounded-lg text-left hover:bg-gray-100 
-                border-l-4 ${isActive("/stats") ? "border-primary text-primary" : "border-transparent"}
-              `}
-            >
-              <BarChart2Icon className="mr-3 h-5 w-5" />
-              <span>Statistics</span>
-            </a>
-          </Link>
+          <div>
+            <Link href="/reviews">
+              <div
+                className={`
+                  flex items-center w-full p-3 rounded-lg text-left hover:bg-gray-100 cursor-pointer
+                  border-l-4 ${isActive("/reviews") ? "border-primary text-primary" : "border-transparent"}
+                `}
+              >
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  className="mr-3 h-5 w-5" 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
+                  />
+                </svg>
+                <span>My Reviews</span>
+              </div>
+            </Link>
+          </div>
+          
+          <div>
+            <Link href="/discover">
+              <div
+                className={`
+                  flex items-center w-full p-3 rounded-lg text-left hover:bg-gray-100 cursor-pointer
+                  border-l-4 ${isActive("/discover") ? "border-primary text-primary" : "border-transparent"}
+                `}
+              >
+                <CompassIcon className="mr-3 h-5 w-5" />
+                <span>Discover</span>
+              </div>
+            </Link>
+          </div>
+          
+          <div>
+            <Link href="/stats">
+              <div
+                className={`
+                  flex items-center w-full p-3 rounded-lg text-left hover:bg-gray-100 cursor-pointer
+                  border-l-4 ${isActive("/stats") ? "border-primary text-primary" : "border-transparent"}
+                `}
+              >
+                <BarChart2Icon className="mr-3 h-5 w-5" />
+                <span>Statistics</span>
+              </div>
+            </Link>
+          </div>
         </div>
         
         <div className="mt-8 pt-6 border-t border-gray-200">
           <div className="space-y-1">
-            <Link href="/profile">
-              <a
-                className={`
-                  flex items-center w-full p-3 rounded-lg text-left hover:bg-gray-100 
-                  border-l-4 ${isActive("/profile") ? "border-primary text-primary" : "border-transparent"}
-                `}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="mr-3 h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+            <div>
+              <Link href="/profile">
+                <div
+                  className={`
+                    flex items-center w-full p-3 rounded-lg text-left hover:bg-gray-100 cursor-pointer
+                    border-l-4 ${isActive("/profile") ? "border-primary text-primary" : "border-transparent"}
+                  `}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
-                <span>My Profile</span>
-              </a>
-            </Link>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="mr-3 h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
+                  <span>My Profile</span>
+                </div>
+              </Link>
+            </div>
 
-            <Link href="/settings">
-              <a
-                className={`
-                  flex items-center w-full p-3 rounded-lg text-left hover:bg-gray-100 
-                  border-l-4 ${isActive("/settings") ? "border-primary text-primary" : "border-transparent"}
-                `}
-              >
-                <SettingsIcon className="mr-3 h-5 w-5" />
-                <span>Settings</span>
-              </a>
-            </Link>
+            <div>
+              <Link href="/settings">
+                <div
+                  className={`
+                    flex items-center w-full p-3 rounded-lg text-left hover:bg-gray-100 cursor-pointer
+                    border-l-4 ${isActive("/settings") ? "border-primary text-primary" : "border-transparent"}
+                  `}
+                >
+                  <SettingsIcon className="mr-3 h-5 w-5" />
+                  <span>Settings</span>
+                </div>
+              </Link>
+            </div>
             
-            <Link href="/help">
-              <a
-                className={`
-                  flex items-center w-full p-3 rounded-lg text-left hover:bg-gray-100 
-                  border-l-4 ${isActive("/help") ? "border-primary text-primary" : "border-transparent"}
-                `}
-              >
-                <HelpCircleIcon className="mr-3 h-5 w-5" />
-                <span>Help Center</span>
-              </a>
-            </Link>
+            <div>
+              <Link href="/help">
+                <div
+                  className={`
+                    flex items-center w-full p-3 rounded-lg text-left hover:bg-gray-100 cursor-pointer
+                    border-l-4 ${isActive("/help") ? "border-primary text-primary" : "border-transparent"}
+                  `}
+                >
+                  <HelpCircleIcon className="mr-3 h-5 w-5" />
+                  <span>Help Center</span>
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

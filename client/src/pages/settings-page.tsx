@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { Bell, Moon, Sun, Monitor, Globe, Save, Trash2, LogOut } from "lucide-react";
+import { Moon, Sun, Monitor, Save, Trash2, LogOut } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -15,20 +14,9 @@ export default function SettingsPage() {
   const { toast } = useToast();
   
   // Preferences states
-  const [theme, setTheme] = useState("system");
+  const [theme, setTheme] = useState("light");
   const [fontSize, setFontSize] = useState([16]);
   const [language, setLanguage] = useState("english");
-  
-  // Notification states
-  const [emailNotifications, setEmailNotifications] = useState(true);
-  const [pushNotifications, setPushNotifications] = useState(true);
-  const [weeklyDigest, setWeeklyDigest] = useState(false);
-  const [goalReminders, setGoalReminders] = useState(true);
-  
-  // Privacy states
-  const [publicProfile, setPublicProfile] = useState(true);
-  const [showReadingActivity, setShowReadingActivity] = useState(true);
-  const [shareReviews, setShareReviews] = useState(true);
   
   const saveAppearanceSettings = () => {
     toast({
@@ -71,20 +59,6 @@ export default function SettingsPage() {
               <span>Appearance</span>
             </button>
             <button 
-              onClick={() => setActiveTab("notifications")}
-              className={`flex items-center justify-start px-4 py-2 text-left rounded-md hover:bg-gray-100 ${activeTab === "notifications" ? "bg-gray-100 text-primary font-medium" : ""}`}
-            >
-              <Bell className="mr-2 h-4 w-4" />
-              <span>Notifications</span>
-            </button>
-            <button 
-              onClick={() => setActiveTab("privacy")}
-              className={`flex items-center justify-start px-4 py-2 text-left rounded-md hover:bg-gray-100 ${activeTab === "privacy" ? "bg-gray-100 text-primary font-medium" : ""}`}
-            >
-              <Globe className="mr-2 h-4 w-4" />
-              <span>Privacy</span>
-            </button>
-            <button 
               onClick={() => setActiveTab("account")}
               className={`flex items-center justify-start px-4 py-2 text-left rounded-md hover:bg-gray-100 ${activeTab === "account" ? "bg-gray-100 text-primary font-medium" : ""}`}
             >
@@ -108,7 +82,7 @@ export default function SettingsPage() {
               <CardContent className="space-y-6">
                 <div className="space-y-2">
                   <Label>Theme</Label>
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-2 gap-2">
                     <Button
                       variant={theme === "light" ? "default" : "outline"}
                       className="flex flex-col items-center justify-center h-20 w-full"
@@ -124,14 +98,6 @@ export default function SettingsPage() {
                     >
                       <Moon className="mb-1 h-5 w-5" />
                       <span>Dark</span>
-                    </Button>
-                    <Button
-                      variant={theme === "system" ? "default" : "outline"}
-                      className="flex flex-col items-center justify-center h-20 w-full"
-                      onClick={() => setTheme("system")}
-                    >
-                      <Monitor className="mb-1 h-5 w-5" />
-                      <span>System</span>
                     </Button>
                   </div>
                 </div>
