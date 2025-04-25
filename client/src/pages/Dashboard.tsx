@@ -332,31 +332,6 @@ const Dashboard = () => {
             </div>
             
             <div className="space-y-6">
-              {/* Sample activities - in a real app, this would be fetched from an API */}
-              <div className="flex">
-                <div className="flex-shrink-0 mr-4">
-                  <div className="h-10 w-10 rounded-full bg-primary-light bg-opacity-20 flex items-center justify-center">
-                    <BookOpenIcon className="w-5 h-5 text-primary-dark" />
-                  </div>
-                </div>
-                <div>
-                  <p className="text-sm">You finished reading <span className="font-medium">The Alchemist</span></p>
-                  <p className="text-xs text-gray-500 mt-1">Today at 10:23 AM</p>
-                </div>
-              </div>
-              
-              <div className="flex">
-                <div className="flex-shrink-0 mr-4">
-                  <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                    <StarIcon className="w-5 h-5 text-gray-700" />
-                  </div>
-                </div>
-                <div>
-                  <p className="text-sm">You rated <span className="font-medium">Atomic Habits</span> 4.5 stars</p>
-                  <p className="text-xs text-gray-500 mt-1">Yesterday at 7:45 PM</p>
-                </div>
-              </div>
-              
               <div className="flex">
                 <div className="flex-shrink-0 mr-4">
                   <div className="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center">
@@ -364,20 +339,32 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div>
-                  <p className="text-sm">You added <span className="font-medium">Deep Work</span> to your reading list</p>
+                  <p className="text-sm">Added <span className="font-medium">Deep Work</span> to reading list</p>
                   <p className="text-xs text-gray-500 mt-1">2 days ago</p>
                 </div>
               </div>
               
               <div className="flex">
                 <div className="flex-shrink-0 mr-4">
-                  <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-green-600" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                  <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-blue-600" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                   </div>
                 </div>
                 <div>
-                  <p className="text-sm">You wrote a review for <span className="font-medium">Sapiens</span></p>
+                  <p className="text-sm">Updated reading session for <span className="font-medium">Atomic Habits</span></p>
                   <p className="text-xs text-gray-500 mt-1">3 days ago</p>
+                </div>
+              </div>
+              
+              <div className="flex">
+                <div className="flex-shrink-0 mr-4">
+                  <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-purple-600" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm">Created new collection: <span className="font-medium">Science Fiction</span></p>
+                  <p className="text-xs text-gray-500 mt-1">5 days ago</p>
                 </div>
               </div>
             </div>

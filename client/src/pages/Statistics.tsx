@@ -31,13 +31,13 @@ const Statistics = () => {
 
   // Sample data for day-by-day reading - this should come from API in a real app
   const readingSchedule = [
-    { day: "Monday", minutes: 45 },
-    { day: "Tuesday", minutes: 65 },
-    { day: "Wednesday", minutes: 30 },
-    { day: "Thursday", minutes: 40 },
-    { day: "Friday", minutes: 55 },
-    { day: "Saturday", minutes: 90 },
-    { day: "Sunday", minutes: 75 }
+    { day: "Monday", pages: 25 },
+    { day: "Tuesday", pages: 35 },
+    { day: "Wednesday", pages: 18 },
+    { day: "Thursday", pages: 22 },
+    { day: "Friday", pages: 30 },
+    { day: "Saturday", pages: 45 },
+    { day: "Sunday", pages: 40 }
   ];
 
   const months = [
@@ -165,7 +165,7 @@ const Statistics = () => {
           </CardContent>
         </Card>
         
-        {/* Reading Time */}
+        {/* Reading Pace */}
         <Card>
           <CardContent className="p-6">
             {isLoading ? (
@@ -175,10 +175,10 @@ const Statistics = () => {
               </div>
             ) : (
               <>
-                <h4 className="text-gray-500 text-sm mb-1">Reading Time</h4>
+                <h4 className="text-gray-500 text-sm mb-1">Reading Pace</h4>
                 <div className="flex items-end">
-                  <span className="text-3xl font-bold">{Math.floor((stats?.readingTimeMinutes || 0) / 60)}</span>
-                  <span className="text-sm text-gray-500 ml-2">hours</span>
+                  <span className="text-3xl font-bold">{Math.round((stats?.pagesRead || 0) / 7)}</span>
+                  <span className="text-sm text-gray-500 ml-2">pages/week</span>
                 </div>
               </>
             )}
@@ -197,12 +197,12 @@ const Statistics = () => {
                 <div key={index}>
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-sm">{day.day}</span>
-                    <span className="text-sm font-medium">{day.minutes} min</span>
+                    <span className="text-sm font-medium">{day.pages} pages</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div 
                       className="bg-primary h-2 rounded-full" 
-                      style={{ width: `${(day.minutes / 90) * 100}%` }}
+                      style={{ width: `${(day.pages / 45) * 100}%` }}
                     ></div>
                   </div>
                 </div>

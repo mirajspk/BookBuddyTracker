@@ -152,12 +152,21 @@ const Discover = () => {
   return (
     <>
       <div className="mb-6">
-        <h3 className="text-xl font-medium mb-4">Discover Books</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-xl font-medium">Discover Books</h3>
+          <button 
+            onClick={() => setAddBookOpen(true)}
+            className="flex items-center bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-md text-sm"
+          >
+            <PlusIcon className="mr-1 h-4 w-4" />
+            Add Book
+          </button>
+        </div>
         
         <div className="relative">
           <Input
             type="text"
-            placeholder="Search books by title, author, genre..."
+            placeholder="Search books by title, author, genre, ISBN..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
@@ -165,6 +174,9 @@ const Discover = () => {
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <SearchIcon className="text-gray-400" />
           </div>
+        </div>
+        <div className="mt-2 text-xs text-muted-foreground">
+          You can search by book title, author, genre, or ISBN number
         </div>
       </div>
       
@@ -248,7 +260,6 @@ const Discover = () => {
             <TabsList>
               <TabsTrigger value="popular">Popular Books</TabsTrigger>
               <TabsTrigger value="new">New Releases</TabsTrigger>
-              <TabsTrigger value="recommended">Recommended</TabsTrigger>
             </TabsList>
           </Tabs>
           

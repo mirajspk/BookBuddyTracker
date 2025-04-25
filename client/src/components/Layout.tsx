@@ -1,8 +1,7 @@
 import { useState } from "react";
 import Sidebar from "./Sidebar";
-import { useLocation } from "wouter";
-import { MenuIcon, SearchIcon, PlusIcon } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { useLocation, Link } from "wouter";
+import { MenuIcon } from "lucide-react";
 import AddBookModal from "./AddBookModal";
 import { useBooks } from "@/hooks/useBooks";
 import { useToast } from "@/hooks/use-toast";
@@ -13,21 +12,10 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [isAddBookOpen, setIsAddBookOpen] = useState(false);
   const { addBook } = useBooks();
   const { toast } = useToast();
-
-  const handleAddBook = (book: any) => {
-    addBook(book);
-    setIsAddBookOpen(false);
-    toast({
-      title: "Success",
-      description: `"${book.title}" has been added to your library.`
-    });
-  };
 
   // Get the current page title
   const getPageTitle = () => {
@@ -72,46 +60,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   <MenuIcon className="h-6 w-6" />
                 </button>
                 
-                <h2 className="text-xl font-semibold">{getPageTitle()}</h2>
+                <Link href="/">
+                  <a className="text-xl font-semibold hover:text-primary cursor-pointer">{getPageTitle()}</a>
+                </Link>
               </div>
               
               <div className="flex items-center space-x-4">
-                <button 
-                  onClick={() => setSearchOpen(!searchOpen)} 
-                  className="p-2 rounded-full hover:bg-gray-100"
-                >
-                  <SearchIcon className="h-5 w-5 text-gray-600" />
-                </button>
-                
-                <button 
-                  onClick={() => setIsAddBookOpen(true)} 
-                  className="p-2 rounded-full hover:bg-gray-100 relative" 
-                  title="Add New Book"
-                >
-                  <PlusIcon className="h-5 w-5 text-gray-600" />
-                </button>
-                
                 <div className="relative">
                   <ProfileDropdown />
                 </div>
               </div>
             </div>
-            
-            {/* Search Bar */}
-            {searchOpen && (
-              <div className="mt-4 relative">
-                <div className="relative">
-                  <Input
-                    type="text"
-                    placeholder="Search books by title, author, genre..."
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                  />
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <SearchIcon className="h-5 w-5 text-gray-400" />
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </header>
 
@@ -120,13 +79,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           {children}
         </main>
       </div>
-
-      {/* Add Book Modal */}
-      <AddBookModal
-        isOpen={isAddBookOpen}
-        onClose={() => setIsAddBookOpen(false)}
-        onAddBook={handleAddBook}
-      />
     </div>
   );
 };
