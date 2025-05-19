@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -203,17 +204,6 @@ export default function HelpPage() {
             FAQ
           </button>
           <button
-            onClick={() => setActiveTab("guides")}
-            className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${
-              activeTab === "guides" 
-                ? "bg-background text-foreground shadow-sm" 
-                : ""
-            }`}
-          >
-            <BookOpen className="mr-2 h-4 w-4" />
-            Guides
-          </button>
-          <button
             onClick={() => setActiveTab("contact")}
             className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${
               activeTab === "contact" 
@@ -262,66 +252,6 @@ export default function HelpPage() {
               </div>
             ))
           )}
-        </div>
-      )}
-
-      {/* Guides Tab */}
-      {activeTab === "guides" && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[
-            {
-              title: "Getting Started",
-              description: "Learn the basics of BookTrack and set up your account",
-              icon: CheckCircle2,
-              badge: "Beginner"
-            },
-            {
-              title: "Managing Your Library",
-              description: "Organize books, create collections, and customize your library",
-              icon: BookCopy,
-              badge: "Essential"
-            },
-            {
-              title: "Tracking Reading Progress",
-              description: "Log reading sessions and track your reading habits",
-              icon: BarChart,
-              badge: "Popular"
-            },
-            {
-              title: "Writing Effective Reviews",
-              description: "Tips for writing helpful and insightful book reviews",
-              icon: MessageSquare,
-              badge: "Tips"
-            },
-            {
-              title: "Setting Reading Goals",
-              description: "Create and achieve your yearly reading challenges",
-              icon: CheckCircle2,
-              badge: "Motivation"
-            },
-            {
-              title: "Advanced Features",
-              description: "Discover all the powerful features of BookTrack",
-              icon: BookOpen,
-              badge: "Advanced"
-            }
-          ].map((guide, index) => (
-            <Card key={index} className="overflow-hidden">
-              <div className="bg-primary/10 p-4 flex items-center justify-center">
-                <guide.icon className="h-12 w-12 text-primary" />
-              </div>
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-start">
-                  <CardTitle className="text-lg">{guide.title}</CardTitle>
-                  <Badge variant="secondary">{guide.badge}</Badge>
-                </div>
-                <CardDescription>{guide.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button variant="outline" className="w-full">Read Guide</Button>
-              </CardContent>
-            </Card>
-          ))}
         </div>
       )}
 

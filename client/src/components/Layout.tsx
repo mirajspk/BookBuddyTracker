@@ -61,7 +61,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </button>
                 
                 <Link href="/">
-                  <a className="text-xl font-semibold hover:text-primary cursor-pointer">{getPageTitle()}</a>
+                  <a className="flex items-center space-x-2 cursor-pointer">
+                    <span className="text-xl font-semibold hover:text-primary">BookTrack</span>
+                  </a>
                 </Link>
               </div>
               

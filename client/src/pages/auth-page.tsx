@@ -80,7 +80,11 @@ export default function AuthPage() {
       title: "Login successful",
       description: "Welcome back to BookTrack!",
     });
-    
+    toast({
+      title: "Security Alert",
+      description: "A login to your profile has just occurred. If this wasn't you, please change your password immediately.",
+      variant: "destructive"
+    });
     window.location.href = "/"; // Redirect to dashboard
   };
 
